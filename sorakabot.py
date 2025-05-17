@@ -25,11 +25,13 @@ data_educativo = {
     'conteudo': [
         """Informações detalhadas sobre como agir em caso de engasgo em adultos:\n
         1. Verifique se a pessoa consegue tossir ou falar.
+        
         2. Se não consegue, está com obstrução total:
         Fique atrás da pessoa.
         Posicione uma mão fechada sobre o abdômen (acima do umbigo).
         Com a outra mão por cima, realize compressões abdominais rápidas e para cima (Manobra de Heimlich).
         Repita até o objeto sair ou a pessoa perder a consciência.
+        
         3. Se perder a consciência:
         Chame o SAMU (192).
         Inicie RCP
