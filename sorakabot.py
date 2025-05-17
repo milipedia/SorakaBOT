@@ -10,12 +10,13 @@ def configure_genai():
     try:
         genai.configure(api_key=st.secrets["GEMINI_API_KEY"])
         return True
-    except streamlit.runtime.secrets.StreamlitSecretNotFoundError:
+    except KeyError:
         st.error("Erro: Chave da API Gemini não encontrada nos segredos do Streamlit.")
         return False
     except Exception as e:
         st.error(f"Ocorreu um erro ao configurar a API Gemini: {e}")
         return False
+
 
 # Banco de Dados de Emergências
 data_emergencias = {
@@ -136,7 +137,8 @@ def buscar_servicos_emergencia(cep):
 
                 if configure_genai():
                     # Use o nome exato do modelo conforme listado no log
-                    model = genai.GenerativeModel('models/gemini-2.0-pro')
+                  model = genai.GenerativeModel('gemini-pro')
+
 
                     prompt = f"""
                     Considerando a localização com o endereço: {endereco_info} (latitude: {latitude}, longitude: {longitude}),
