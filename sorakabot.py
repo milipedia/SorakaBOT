@@ -5,19 +5,17 @@ from geopy.geocoders import Nominatim
 import re
 import google.generativeai as genai
 
-try:
-    genai.configure(api_key=st.secrets["GEMINI_API_KEY"])
-
-    print("Modelos disponíveis:")
-    for model in genai.list_models():
-        print(f"- Nome: {model.name}")
-        for method in model.supported_generation_methods:
-            print(f"  - Suporta: {method}")
-
-except StreamlitSecretNotFoundError as e:
-    print(f"Erro ao carregar segredos: {e}")
-except Exception as e:
-    print(f"Ocorreu um erro ao listar os modelos: {e}")
+# Função para configurar a API (chamada sempre que necessário)
+def configure_genai():
+    try:
+        genai.configure(api_key=st.secrets["GEMINI_API_KEY"])
+        return True
+    except streamlit.runtime.secrets.StreamlitSecretNotFoundError:
+        st.error("Erro: Chave da API Gemini não encontrada nos segredos do Streamlit.")
+        return False
+    except Exception as e:
+        st.error(f"Ocorreu um erro ao configurar a API Gemini: {e}")
+        return False
 
 # Banco de Dados de Emergências
 data_emergencias = {
@@ -39,13 +37,13 @@ data_educativo = {
         """Informações detalhadas sobre como agir em caso de engasgo em adultos:\n
             1. Verifique se a pessoa consegue tossir ou falar.\n
             2. Se não consegue, está com obstrução total:\n
-               Fique atrás da pessoa.\n
-               Posicione uma mão fechada sobre o abdômen (acima do umbigo).\n
-               Com a outra mão por cima, realize compressões abdominais rápidas e para cima (Manobra de Heimlich).\n
-               Repita até o objeto sair ou a pessoa perder a consciência.\n
+                Fique atrás da pessoa.\n
+                Posicione uma mão fechada sobre o abdômen (acima do umbigo).\n
+                Com a outra mão por cima, realize compressões abdominais rápidas e para cima (Manobra de Heimlich).\n
+                Repita até o objeto sair ou a pessoa perder a consciência.\n
             3. Se perder a consciência:\n
-               Chame o SAMU (192).\n
-               Inicie RCP\n
+                Chame o SAMU (192).\n
+                Inicie RCP\n
         """,
         """Informações detalhadas sobre como agir em caso de engasgo em bebêsCrianças (1 ano até início da puberdade)\n
         Procedimento semelhante ao do adulto, com menor força.\n
@@ -84,16 +82,16 @@ data_educativo = {
         """Passos básicos da Reanimação Cardiopulmonar (RCP)\n
         RCP em Adultos\n
         1. Compressões torácicas:\n
-           Local: centro do peito.\n
-           Profundidade: 5 a 6 cm.\n
-           Ritmo: 100 a 120 compressões por minuto (use a música “Stayin' Alive” como referência).\n
-           Permita o retorno total do tórax.\n
-           Relação: 30 compressões : 2 ventilações.\n
+            Local: centro do peito.\n
+            Profundidade: 5 a 6 cm.\n
+            Ritmo: 100 a 120 compressões por minuto (use a música “Stayin' Alive” como referência).\n
+            Permita o retorno total do tórax.\n
+            Relação: 30 compressões : 2 ventilações.\n
         \n
         2. Ventilações boca-a-boca:\n
-           Incline a cabeça para trás.\n
-           Tampe o nariz.\n
-           Faça duas insuflações (1 segundo cada).\n
+            Incline a cabeça para trás.\n
+            Tampe o nariz.\n
+            Faça duas insuflações (1 segundo cada).\n
         \n
         RCP em Crianças (1 ano até puberdade)\n
         Compressões: com uma ou duas mãos, dependendo do tamanho da criança.\n
@@ -102,12 +100,12 @@ data_educativo = {
         \n
         RCP em Bebês (<1 ano)\n
         1. Compressões:\n
-           Use dois dedos no centro do peito (abaixo da linha dos mamilos).\n
-           Profundidade: cerca de 4 cm.\n
-           Ritmo: 100 a 120/min.\n
+            Use dois dedos no centro do peito (abaixo da linha dos mamilos).\n
+            Profundidade: cerca de 4 cm.\n
+            Ritmo: 100 a 120/min.\n
         2. Ventilações:\n
-           Boca-a-boca e nariz (cubra ambos com sua boca).\n
-           Relação: 30:2 ou 15:2\n
+            Boca-a-boca e nariz (cubra ambos com sua boca).\n
+            Relação: 30:2 ou 15:2\n
         """
     ]
 }
@@ -136,49 +134,51 @@ def buscar_servicos_emergencia(cep):
                 latitude = location_data.latitude
                 longitude = location_data.longitude
 
-                genai.configure(api_key=st.secrets["GEMINI_API_KEY"])
-                model = genai.GenerativeModel('gemini-2-pro')  # Tentando 'gemini-2-pro'
+                if configure_genai():  # Configura a API antes de usar
+                    model = genai.GenerativeModel('gemini-2-pro')  # Usando um modelo específico
 
-                prompt = f"""
-                Considerando a localização com o endereço: {endereco_info} (latitude: {latitude}, longitude: {longitude}),
-                liste os endereços de hospitais, delegacias de polícia e corpo de bombeiros
-                mais próximos. Forneça o nome da instituição e o endereço.
-                Limite a resposta a no máximo 5 resultados de cada tipo.
-                """
-                response = model.generate_content(prompt)
+                    prompt = f"""
+                    Considerando a localização com o endereço: {endereco_info} (latitude: {latitude}, longitude: {longitude}),
+                    liste os endereços de hospitais, delegacias de polícia e corpo de bombeiros
+                    mais próximos. Forneça o nome da instituição e o endereço.
+                    Limite a resposta a no máximo 5 resultados de cada tipo.
+                    """
+                    response = model.generate_content(prompt)
 
-                if response.text:
-                    resultados = "Serviços de emergência próximos:\n"
-                    servicos = {"hospitais": [], "delegacias": [], "bombeiros": []}
-                    linhas = response.text.split('\n')
-                    tipo_atual = None
+                    if response.text:
+                        resultados = "Serviços de emergência próximos:\n"
+                        servicos = {"hospitais": [], "delegacias": [], "bombeiros": []}
+                        linhas = response.text.split('\n')
+                        tipo_atual = None
 
-                    for linha in linhas:
-                        linha = linha.strip()
-                        if not linha:
-                            continue
-                        if "hospital" in linha.lower():
-                            tipo_atual = "hospitais"
-                        elif "delegacia" in linha.lower() or "polícia" in linha.lower():
-                            tipo_atual = "delegacias"
-                        elif "bombeiro" in linha.lower():
-                            tipo_atual = "bombeiros"
-                        elif tipo_atual and "-" in linha:
-                            partes = linha.split('-', 1)
-                            if len(partes) == 2:
-                                nome = partes[0].strip()
-                                endereco = partes[1].strip()
-                                servicos[tipo_atual].append(f"{nome} - {endereco}")
+                        for linha in linhas:
+                            linha = linha.strip()
+                            if not linha:
+                                continue
+                            if "hospital" in linha.lower():
+                                tipo_atual = "hospitais"
+                            elif "delegacia" in linha.lower() or "polícia" in linha.lower():
+                                tipo_atual = "delegacias"
+                            elif "bombeiro" in linha.lower():
+                                tipo_atual = "bombeiros"
+                            elif tipo_atual and "-" in linha:
+                                partes = linha.split('-', 1)
+                                if len(partes) == 2:
+                                    nome = partes[0].strip()
+                                    endereco = partes[1].strip()
+                                    servicos[tipo_atual].append(f"{nome} - {endereco}")
 
-                    output = resultados
-                    for tipo, lista in servicos.items():
-                        if lista:
-                            output += f"\n--- {tipo.capitalize()} ---\n"
-                            for i, servico in enumerate(lista):
-                                output += f"{i+1}. {servico}\n"
-                    return output
+                        output = resultados
+                        for tipo, lista in servicos.items():
+                            if lista:
+                                output += f"\n--- {tipo.capitalize()} ---\n"
+                                for i, servico in enumerate(lista):
+                                    output += f"{i+1}. {servico}\n"
+                        return output
+                    else:
+                        return "Não foi possível obter informações sobre serviços de emergência."
                 else:
-                    return "Não foi possível obter informações sobre serviços de emergência."
+                    return None  # Retorna None se a configuração da API falhar
             else:
                 return "Não foi possível localizar as coordenadas para o endereço fornecido."
         except Exception as e:
@@ -218,7 +218,8 @@ if opcao_principal == "Emergência":
     mensagem_usuario = st.text_input("")
     if mensagem_usuario:
         resposta = responder_emergencia(mensagem_usuario)
-        st.write(f"**Resposta:** {resposta}")
+        if resposta:  # Certifica-se de que há uma resposta para mostrar
+            st.write(f"**Resposta:** {resposta}")
 
 elif opcao_principal == "Educativo":
     st.subheader("Selecione o tema sobre o qual você gostaria de aprender:")
