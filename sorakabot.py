@@ -4,6 +4,9 @@ import requests
 from geopy.geocoders import Nominatim
 import re
 import google.generativeai as genai
+import os
+os.environ["GOOGLE_API_KEY"] = "AIzaSyDWTKse7wvbPt1sgFZb5_0NkFBGKC-hnuA"
+
 
 # Função para configurar a API (chamada sempre que necessário)
 def configure_genai():
@@ -136,7 +139,7 @@ def buscar_servicos_emergencia(cep):
                 longitude = location_data.longitude
 
                 if configure_genai():
-                    model = genai.GenerativeModel('gemini-pro')  # Corrigido aqui
+                   model = genai.GenerativeModel(model_name="gemini-pro")
                     prompt = f"""Considerando a localização com o endereço: {endereco_info} ..."""
                     response = model.generate_content(prompt)
 
