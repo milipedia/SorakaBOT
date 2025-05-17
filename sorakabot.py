@@ -119,7 +119,9 @@ def responder_emergencia(mensagem):
 
 def mostrar_educativo(tema_selecionado):
     conteudo = df_educativo[df_educativo['tema'] == tema_selecionado]['conteudo'].iloc[0]
-    return conteudo
+    st.markdown(f"**{tema_selecionado}:**")
+    st.markdown(conteudo)
+    return conteudo 
 
 def buscar_servicos_emergencia(cep):
     geolocator = Nominatim(user_agent="emergencia_bot")
