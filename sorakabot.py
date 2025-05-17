@@ -36,9 +36,9 @@ data_educativo = {
         Chame o SAMU (192).
         Inicie RCP
         """,
-        """Informações detalhadas sobre como agir em caso de engasgo em bebêsCrianças (1 ano até início da puberdade)
-        Procedimento semelhante ao do adulto, com menor força.
-        Evite empurrar demais para evitar fraturas em costelas.
+        """Informações detalhadas sobre como agir em caso de engasgo em bebêsCrianças (1 ano até início da puberdade)\n
+        Procedimento semelhante ao do adulto, com menor força.\n
+        Evite empurrar demais para evitar fraturas em costelas.\n
 
         Bebês (<1 ano):
         1. Coloque o bebê de bruços sobre o seu antebraço, com a cabeça mais baixa.
@@ -47,14 +47,14 @@ data_educativo = {
         4. Repita até expelir o objeto ou perder a consciência.
         5. Se inconsciente: inicie RCP para bebês (ver seção RCP).
         """,
-        """Informações detalhadas sobre como lidar com diferentes tipos de cortes e sangramentos
-        Avaliação Inicial (válido para todos).
-        Avalie a segurança do local.
-        Lave bem as mãos ou use luvas descartáveis.
-        Verifique o tipo de sangramento:
-        Arterial: sangue vermelho vivo e em jato — risco alto.
-        Venoso: sangue escuro e em fluxo contínuo — ainda grave.
-        Capilar: superficial, escorre lentamente.
+        """Informações detalhadas sobre como lidar com diferentes tipos de cortes e sangramentos.\n
+        Avaliação Inicial (válido para todos).\n
+        Avalie a segurança do local.\n
+        Lave bem as mãos ou use luvas descartáveis.\n
+        Verifique o tipo de sangramento:\n
+        Arterial: sangue vermelho vivo e em jato — risco alto.\n
+        Venoso: sangue escuro e em fluxo contínuo — ainda grave.\n
+        Capilar: superficial, escorre lentamente.\n
 
         Procedimentos
 
@@ -70,14 +70,14 @@ data_educativo = {
         Pressão deve ser mais delicada, mas eficaz.
         Nunca use algodão diretamente no corte profundo.
         Não use álcool ou antissépticos agressivos em feridas abertas em bebês.""",
-        """Passos básicos da Reanimação Cardiopulmonar (RCP)
-        RCP em Adultos
-        1. Compressões torácicas:
-        Local: centro do peito.
-        Profundidade: 5 a 6 cm.
-        Ritmo: 100 a 120 compressões por minuto (use a música “Stayin' Alive” como referência).
-        Permita o retorno total do tórax.
-        Relação: 30 compressões : 2 ventilações.
+        """Passos básicos da Reanimação Cardiopulmonar (RCP)\n
+        RCP em Adultos\n
+        1. Compressões torácicas:\n
+        Local: centro do peito.\n
+        Profundidade: 5 a 6 cm.\n
+        Ritmo: 100 a 120 compressões por minuto (use a música “Stayin' Alive” como referência).\n
+        Permita o retorno total do tórax.\n
+        Relação: 30 compressões : 2 ventilações.\n
 
         2. Ventilações boca-a-boca:
         Incline a cabeça para trás.
