@@ -122,7 +122,7 @@ def buscar_servicos_emergencia(cep):
                 latitude = location_data.latitude
                 longitude = location_data.longitude
 
-                genai.configure(api_key=st.secrets["GEMINI_API_KEY"])
+                genai.configure(api_key=st.secrets["AIzaSyDWTKse7wvbPt1sgFZb5_0NkFBGKC-hnuA"])
                 model = genai.GenerativeModel('gemini-pro')
 
                 prompt = f"""
