@@ -139,7 +139,7 @@ def buscar_servicos_emergencia(cep):
                 longitude = location_data.longitude
 
                 if configure_genai():
-                   model = genai.GenerativeModel(model_name="gemini-pro")
+                    model = genai.GenerativeModel(model_name="gemini-pro")
                     prompt = f"""Considerando a localização com o endereço: {endereco_info} ..."""
                     response = model.generate_content(prompt)
 
