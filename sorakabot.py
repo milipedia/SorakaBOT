@@ -123,7 +123,7 @@ def buscar_servicos_emergencia(cep):
                 longitude = location_data.longitude
 
                 genai.configure(api_key=st.secrets["GEMINI_API_KEY"])
-                model = genai.GenerativeModel('gemini-pro')
+                model = genai.GenerativeModel('gemini-2-flash')  # Alterado para gemini-2-flash
 
                 prompt = f"""
                 Considerando a localização com o endereço: {endereco_info} (latitude: {latitude}, longitude: {longitude}),
@@ -214,4 +214,3 @@ elif opcao_principal == "Educativo":
         mostrar_educativo(tema_selecionado)
 
 st.sidebar.info("Este ChatBot é uma ferramenta de auxílio e não substitui o atendimento profissional em emergências graves. Em caso de emergência, ligue para o 192 (SAMU).")
-
