@@ -136,8 +136,10 @@ def buscar_servicos_emergencia(cep):
                 longitude = location_data.longitude
 
                 if configure_genai():
-                    # Use o nome exato do modelo conforme listado no log
-                  model = genai.GenerativeModel('gemini-pro')
+                    model = genai.GenerativeModel('gemini-pro')  # Corrigido aqui
+                    prompt = f"""Considerando a localização com o endereço: {endereco_info} ..."""
+                    response = model.generate_content(prompt)
+
 
 
                     prompt = f"""
