@@ -72,12 +72,12 @@ data_educativo = {
         Não use álcool ou antissépticos agressivos em feridas abertas em bebês.""",
         """Passos básicos da Reanimação Cardiopulmonar (RCP)\n
         RCP em Adultos\n
-        1. Compressões torácicas:\n
-        Local: centro do peito.\n
-        Profundidade: 5 a 6 cm.\n
-        Ritmo: 100 a 120 compressões por minuto (use a música “Stayin' Alive” como referência).\n
-        Permita o retorno total do tórax.\n
-        Relação: 30 compressões : 2 ventilações.\n
+        1. Compressões torácicas:
+        Local: centro do peito.
+        Profundidade: 5 a 6 cm.
+        Ritmo: 100 a 120 compressões por minuto (use a música “Stayin' Alive” como referência).
+        Permita o retorno total do tórax.
+        Relação: 30 compressões : 2 ventilações.
 
         2. Ventilações boca-a-boca:
         Incline a cabeça para trás.
