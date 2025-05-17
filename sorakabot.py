@@ -48,13 +48,13 @@ data_educativo = {
         5. Se inconsciente: inicie RCP para bebês (ver seção RCP).
         """,
         """Informações detalhadas sobre como lidar com diferentes tipos de cortes e sangramentos.\n
-        Avaliação Inicial (válido para todos).\n
-        Avalie a segurança do local.\n
-        Lave bem as mãos ou use luvas descartáveis.\n
-        Verifique o tipo de sangramento:\n
-        Arterial: sangue vermelho vivo e em jato — risco alto.\n
-        Venoso: sangue escuro e em fluxo contínuo — ainda grave.\n
-        Capilar: superficial, escorre lentamente.\n
+        Avaliação Inicial (válido para todos).
+        Avalie a segurança do local.
+        Lave bem as mãos ou use luvas descartáveis.
+        Verifique o tipo de sangramento:
+        Arterial: sangue vermelho vivo e em jato — risco alto.
+        Venoso: sangue escuro e em fluxo contínuo — ainda grave.
+        Capilar: superficial, escorre lentamente.
 
         Procedimentos
 
