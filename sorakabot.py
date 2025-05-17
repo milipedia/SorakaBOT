@@ -134,8 +134,9 @@ def buscar_servicos_emergencia(cep):
                 latitude = location_data.latitude
                 longitude = location_data.longitude
 
-                if configure_genai():  # Configura a API antes de usar
-                    model = genai.GenerativeModel('gemini-2-pro')  # Usando um modelo específico
+                if configure_genai():
+                    # Use o nome exato do modelo conforme listado no log
+                    model = genai.GenerativeModel('models/gemini-2.0-pro')
 
                     prompt = f"""
                     Considerando a localização com o endereço: {endereco_info} (latitude: {latitude}, longitude: {longitude}),
@@ -178,7 +179,7 @@ def buscar_servicos_emergencia(cep):
                     else:
                         return "Não foi possível obter informações sobre serviços de emergência."
                 else:
-                    return None  # Retorna None se a configuração da API falhar
+                    return None
             else:
                 return "Não foi possível localizar as coordenadas para o endereço fornecido."
         except Exception as e:
