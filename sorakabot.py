@@ -4,6 +4,24 @@ import requests
 from geopy.geocoders import Nominatim
 import re
 import google.generativeai as genai
+import streamlit as st
+import google.generativeai as genai
+
+try:
+    genai.configure(api_key=st.secrets["GEMINI_API_KEY"])
+
+    print("Modelos disponíveis:")
+    for model in genai.list_models():
+        print(f"- Nome: {model.name}")
+        for method in model.supported_generation_methods:
+            print(f"  - Suporta: {method}")
+
+except StreamlitSecretNotFoundError as e:
+    print(f"Erro ao carregar segredos: {e}")
+except Exception as e:
+    print(f"Ocorreu um erro ao listar os modelos: {e}")
+
+# ... o restante do seu código do chatbot ...
 
 # Banco de Dados de Emergências
 data_emergencias = {
