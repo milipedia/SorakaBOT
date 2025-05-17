@@ -102,32 +102,75 @@ df_educativo = pd.DataFrame(data_educativo)
 
 # --- Funções ---
 
-def responder_emergencia(mensagem):
-    mensagem = mensagem.lower()
-    print(f"Mensagem recebida: {mensagem}") # Log da mensagem
+def buscar_servicos_emergencia(cep):
+    geolocator = Nominatim(user_agent="emergencia_bot")
+    try:
+        print(f"CEP recebido em buscar_servicos_emergencia: {cep}")  # Log: CEP recebido
+        location = geolocator.geocode(f"{cep}, Porto Alegre, RS, Brasil")
+        print(f"Resultado da geocodificação: {location}")  # Log: Resultado da geocodificação
+        if location:
+            latitude = location.latitude
+            longitude = location.longitude
+            print(f"Latitude: {latitude}, Longitude: {longitude}")  # Log: Coordenadas
 
-    for index, row in df_emergencias.iterrows():
-        if row['palavra_chave'] in mensagem:
-            print(f"Palavra-chave '{row['palavra_chave']}' encontrada.") # Log de palavra-chave
-            return row['instrucoes']
+            # --- Integração com o Gemini para buscar serviços de emergência ---
+            genai.configure(api_key=st.secrets["AIzaSyDWTKse7wvbPt1sgFZb5_0NkFBGKC-hnuA"]) #Removi a quebra de linha
+            model = genai.GenerativeModel('gemini-pro')
 
-    if re.search(r'\b(cep)\b', mensagem, re.IGNORECASE):
-        print("Palavra 'cep' encontrada.") # Log de 'cep'
-        return "Por favor, digite o seu CEP para que eu possa buscar os serviços de emergência próximos."
-    elif re.search(r'\d{5}-\d{3}|\d{8}', mensagem):
-        cep_match = re.search(r'\d{5}-\d{3}|\d{8}', mensagem)
-        if cep_match:
-            cep = cep_match.group(0)
-            print(f"CEP encontrado: {cep}") # Log do CEP encontrado
-            return buscar_servicos_emergencia(cep)
+            prompt = f"""
+            Considerando a localização com latitude {latitude} e longitude {longitude},
+            liste os endereços de hospitais, delegacias de polícia e corpo de bombeiros
+            mais próximos em Porto Alegre, RS. Forneça o nome da instituição e o endereço.
+            Limite a resposta a no máximo 5 resultados de cada tipo.
+            """
+            print(f"Prompt enviado ao Gemini: {prompt}") #log do prompt enviado
+            response = model.generate_content(prompt)
+            print(f"Resposta do Gemini: {response}")  # Log: Resposta do Gemini
+
+            if response.text:
+                resultados = "Serviços de emergência próximos:\n"
+                servicos = {"hospitais": [], "delegacias": [], "bombeiros": []}
+                linhas = response.text.split('\n')
+                tipo_atual = None
+
+                for linha in linhas:
+                    linha = linha.strip()
+                    if not linha:
+                        continue
+                    if "hospital" in linha.lower():
+                        tipo_atual = "hospitais"
+                    elif "delegacia" in linha.lower() or "polícia" in linha.lower():
+                        tipo_atual = "delegacias"
+                    elif "bombeiro" in linha.lower():
+                        tipo_atual = "bombeiros"
+                    elif tipo_atual:
+                        partes = linha.split('-', 1)
+                        if len(partes) == 2:
+                            nome = partes[0].strip()
+                            endereco = partes[1].strip()
+                            servicos[tipo_atual].append(f"{nome} - {endereco}")
+
+                contador = 1
+                for tipo, lista in servicos.items():
+                    if lista:
+                        resultados += f"\n--- {tipo.capitalize()} ---\n"
+                        for servico in lista:
+                            resultados += f"{contador}. {servico}\n"
+                            contador += 1
+                print(f"Resultados formatados: {resultados}") #log dos resultados
+                if contador > 1:
+                    return resultados
+                else:
+                    return "Não foram encontrados serviços de emergência próximos a esta localização."
+            else:
+                return "Não foi possível obter informações sobre serviços de emergência."
+
         else:
-            print("Formato de CEP encontrado, mas falha na extração.") # Log de falha na extração
-    elif any(palavra in mensagem for palavra in ['grave', 'urgente', 'inconsciente', 'não respira']):
-        print("Palavra de emergência grave encontrada.") # Log de emergência grave
-        return "Esta parece ser uma emergência grave! Ligue imediatamente para o SAMU (192)."
-    else:
-        print("Nenhuma condição específica atendida.") # Log de não reconhecimento
-        return "Desculpe, não entendi a emergência. Por favor, seja mais específico."
+            return "CEP inválido ou não encontrado."
+    except Exception as e:
+        print(f"Erro na função buscar_servicos_emergencia: {e}")  # Log: Exceção
+        return f"Ocorreu um erro ao buscar os serviços de emergência: {e}"
+
 
 def mostrar_educativo(tema_selecionado):
     conteudo = df_educativo[df_educativo['tema'] == tema_selecionado]['conteudo'].iloc[0]
