@@ -24,7 +24,7 @@ data_educativo = {
     'tema': ['Engasgo (Adulto)', 'Engasgo (Bebê)', 'Cortes e Sangramentos', 'RCP Básica'],
     'conteudo': [
         """Informações detalhadas sobre como agir em caso de engasgo em adultos:\n
-        1. Verifique se a pessoa consegue tossir ou falar.
+            1. Verifique se a pessoa consegue tossir ou falar.
         
         2. Se não consegue, está com obstrução total:
         Fique atrás da pessoa.
