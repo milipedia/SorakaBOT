@@ -104,17 +104,29 @@ df_educativo = pd.DataFrame(data_educativo)
 
 def responder_emergencia(mensagem):
     mensagem = mensagem.lower()
+    print(f"Mensagem recebida: {mensagem}") # Log da mensagem
+
     for index, row in df_emergencias.iterrows():
         if row['palavra_chave'] in mensagem:
+            print(f"Palavra-chave '{row['palavra_chave']}' encontrada.") # Log de palavra-chave
             return row['instrucoes']
+
     if re.search(r'\b(cep)\b', mensagem, re.IGNORECASE):
+        print("Palavra 'cep' encontrada.") # Log de 'cep'
         return "Por favor, digite o seu CEP para que eu possa buscar os serviços de emergência próximos."
-    elif re.search(r'\d{5}-\d{3}|\d{8}', mensagem): # Regex para identificar formato de CEP
-        cep = re.search(r'\d{5}-\d{3}|\d{8}', mensagem).group(0)
-        return buscar_servicos_emergencia(cep)
+    elif re.search(r'\d{5}-\d{3}|\d{8}', mensagem):
+        cep_match = re.search(r'\d{5}-\d{3}|\d{8}', mensagem)
+        if cep_match:
+            cep = cep_match.group(0)
+            print(f"CEP encontrado: {cep}") # Log do CEP encontrado
+            return buscar_servicos_emergencia(cep)
+        else:
+            print("Formato de CEP encontrado, mas falha na extração.") # Log de falha na extração
     elif any(palavra in mensagem for palavra in ['grave', 'urgente', 'inconsciente', 'não respira']):
+        print("Palavra de emergência grave encontrada.") # Log de emergência grave
         return "Esta parece ser uma emergência grave! Ligue imediatamente para o SAMU (192)."
     else:
+        print("Nenhuma condição específica atendida.") # Log de não reconhecimento
         return "Desculpe, não entendi a emergência. Por favor, seja mais específico."
 
 def mostrar_educativo(tema_selecionado):
