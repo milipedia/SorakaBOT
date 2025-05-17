@@ -37,8 +37,8 @@ data_educativo = {
         Inicie RCP
         """,
         """Informações detalhadas sobre como agir em caso de engasgo em bebêsCrianças (1 ano até início da puberdade)\n
-        Procedimento semelhante ao do adulto, com menor força.\n
-        Evite empurrar demais para evitar fraturas em costelas.\n
+        Procedimento semelhante ao do adulto, com menor força.
+        Evite empurrar demais para evitar fraturas em costelas.
 
         Bebês (<1 ano):
         1. Coloque o bebê de bruços sobre o seu antebraço, com a cabeça mais baixa.
